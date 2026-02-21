@@ -33,7 +33,8 @@ export const ProductsSidebar = ({ whatsappNumber }: ProductModalProps) => {
     open: boolean;
     product?: any;
     showForm: boolean;
-  }>({ open: false, showForm: false });
+    selectedVariantIds?: string[];
+  }>({ open: false, showForm: false, selectedVariantIds: [] });
 
   const { data: categories = [], isLoading: categoriesLoading } = useQuery({
     queryKey: ['categories'],
@@ -230,7 +231,8 @@ export const ProductsSidebar = ({ whatsappNumber }: ProductModalProps) => {
                   <div className="flex gap-2">
                     {product.has_buy_now && (
                       <button
-                        onClick={() =>
+                        onClick={(e) => {
+                          e.stopPropagation();
                           setCheckoutProduct({
                             open: true,
                             product: {
@@ -240,7 +242,7 @@ export const ProductsSidebar = ({ whatsappNumber }: ProductModalProps) => {
                             },
                             mode: 'buy',
                           })
-                        }
+                        }}
                         className="flex-1 py-1.5 md:py-2 px-2 rounded text-xs md:text-sm bg-accent text-accent-foreground hover:bg-accent/90 transition-colors font-medium flex items-center justify-center gap-1"
                       >
                         <ShoppingCart className="w-3 h-3 md:w-4 md:h-4" />
@@ -249,13 +251,15 @@ export const ProductsSidebar = ({ whatsappNumber }: ProductModalProps) => {
                     )}
                     {product.has_contact_us && (
                       <button
-                        onClick={() =>
+                        onClick={(e) => {
+                          e.stopPropagation();
                           setInquiryModal({
                             open: true,
                             product,
                             showForm: false,
+                            selectedVariantIds: ['base'],
                           })
-                        }
+                        }}
                         className="flex-1 py-1.5 md:py-2 px-2 rounded text-xs md:text-sm bg-primary text-primary-foreground hover:bg-primary/90 transition-colors font-medium flex items-center justify-center gap-1"
                       >
                         <MessageCircle className="w-3 h-3 md:w-4 md:h-4" />
@@ -293,7 +297,7 @@ export const ProductsSidebar = ({ whatsappNumber }: ProductModalProps) => {
         open={inquiryModal.open}
         onOpenChange={(open) => {
           if (!open) {
-            setInquiryModal({ open: false, product: undefined, showForm: false });
+            setInquiryModal({ open: false, product: undefined, showForm: false, selectedVariantIds: [] });
           }
         }}
       >
@@ -310,7 +314,109 @@ export const ProductsSidebar = ({ whatsappNumber }: ProductModalProps) => {
                     <p className="text-sm text-gray-600">₹{inquiryModal.product.price}</p>
                   </div>
                 )}
-                <div className="space-y-2">
+
+                {/* Base Product and Variants Selection */}
+                {inquiryModal.product && (
+                  <div className="space-y-2 border-t border-gray-200 pt-3">
+                    <p className="text-xs font-semibold text-foreground">Select items:</p>
+                    <div className="space-y-1.5">
+                      {/* Base Product */}
+                      <button
+                        onClick={() => {
+                          setInquiryModal((prev) => {
+                            const selected = prev.selectedVariantIds || [];
+                            return {
+                              ...prev,
+                              selectedVariantIds: selected.includes('base')
+                                ? selected.filter((v) => v !== 'base')
+                                : [...selected, 'base'],
+                            };
+                          });
+                        }}
+                        className={`w-full px-2 py-1.5 rounded text-xs border transition-colors text-left ${
+                          inquiryModal.selectedVariantIds?.includes('base')
+                            ? 'border-primary bg-primary/10 text-primary font-medium'
+                            : 'border-gray-300 bg-white text-gray-700 hover:border-primary/50'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <span className={`flex items-center gap-2 flex-shrink-0 ${
+                            inquiryModal.selectedVariantIds?.includes('base')
+                              ? 'bg-primary border-primary text-white'
+                              : 'border-gray-300'
+                          }`}>
+                            <span className={`w-3 h-3 rounded border flex items-center justify-center text-[10px] ${
+                              inquiryModal.selectedVariantIds?.includes('base')
+                                ? 'bg-primary border-primary text-white'
+                                : 'border-gray-300'
+                            }`}>
+                              {inquiryModal.selectedVariantIds?.includes('base') && '✓'}
+                            </span>
+                          </span>
+                          <span className="font-medium flex-1">
+                            {inquiryModal.product.dimensions || '-'}
+                          </span>
+                          <span className="font-medium flex-shrink-0">₹{inquiryModal.product.price}</span>
+                        </div>
+                      </button>
+
+                      {/* Variants */}
+                      {inquiryModal.product.variants && inquiryModal.product.variants.length > 0 && (
+                        <>
+                          {inquiryModal.product.variants.map((variant: any, idx: number) => {
+                            const variantObj = typeof variant === 'string' ? JSON.parse(variant) : variant;
+                            const variantId = variantObj.id || `variant-${idx}`;
+                            const isSelected = inquiryModal.selectedVariantIds?.includes(variantId);
+
+                            return (
+                              <button
+                                key={variantId}
+                                onClick={() => {
+                                  setInquiryModal((prev) => {
+                                    const selected = prev.selectedVariantIds || [];
+                                    return {
+                                      ...prev,
+                                      selectedVariantIds: selected.includes(variantId)
+                                        ? selected.filter((v) => v !== variantId)
+                                        : [...selected, variantId],
+                                    };
+                                  });
+                                }}
+                                className={`w-full px-2 py-1.5 rounded text-xs border transition-colors text-left ${
+                                  isSelected
+                                    ? 'border-primary bg-primary/10 text-primary font-medium'
+                                    : 'border-gray-300 bg-white text-gray-700 hover:border-primary/50'
+                                }`}
+                              >
+                                <div className="flex items-center justify-between gap-2">
+                                  <span className={`flex items-center gap-2 flex-shrink-0 ${
+                                    isSelected
+                                      ? 'bg-primary border-primary text-white'
+                                      : 'border-gray-300'
+                                  }`}>
+                                    <span className={`w-3 h-3 rounded border flex items-center justify-center text-[10px] ${
+                                      isSelected
+                                        ? 'bg-primary border-primary text-white'
+                                        : 'border-gray-300'
+                                    }`}>
+                                      {isSelected && '✓'}
+                                    </span>
+                                  </span>
+                                  <span className="font-medium flex-1">
+                                    {variantObj.dimension}
+                                  </span>
+                                  <span className="font-medium flex-shrink-0">₹{variantObj.price || '-'}</span>
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                <div className="space-y-2 border-t border-gray-200 pt-3">
                   <button
                     onClick={() =>
                       setInquiryModal((prev) => ({
@@ -357,7 +463,7 @@ export const ProductsSidebar = ({ whatsappNumber }: ProductModalProps) => {
                 type="inquiry"
                 hideEmail={true}
                 onSuccess={() => {
-                  setInquiryModal({ open: false, product: undefined, showForm: false });
+                  setInquiryModal({ open: false, product: undefined, showForm: false, selectedVariantIds: [] });
                 }}
               />
             </>
