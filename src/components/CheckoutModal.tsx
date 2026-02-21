@@ -276,7 +276,8 @@ Note: A confirmation call will be made to finalize delivery details.
                   <ContactForm
                     productId={product.id}
                     productName={product.name}
-                    type="contact"
+                    type="inquiry"
+                    hideEmail={true}
                     onSuccess={() => onOpenChange(false)}
                   />
                 </TabsContent>

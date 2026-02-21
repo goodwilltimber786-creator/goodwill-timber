@@ -345,7 +345,8 @@ export const ProductsSidebar = ({ whatsappNumber }: ProductModalProps) => {
               <ContactForm
                 productId={inquiryModal.product?.id}
                 productName={inquiryModal.product?.name}
-                type="order"
+                type="inquiry"
+                hideEmail={true}
                 onSuccess={() => {
                   setInquiryModal({ open: false, product: undefined, showForm: false });
                 }}

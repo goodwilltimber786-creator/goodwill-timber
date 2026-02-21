@@ -29,9 +29,14 @@ export const formatOrderNotification = (data: {
   phone: string;
   message: string;
   productName?: string;
-  type: 'contact' | 'order';
+  type: 'contact' | 'order' | 'inquiry';
 }): string => {
-  const header = data.type === 'order' ? '🛒 <b>NEW ORDER</b>' : '📧 <b>NEW CONTACT INQUIRY</b>';
+  let header = '📧 <b>NEW CONTACT INQUIRY</b>';
+  if (data.type === 'order') {
+    header = '🛒 <b>NEW ORDER</b>';
+  } else if (data.type === 'inquiry') {
+    header = '❓ <b>NEW PRODUCT INQUIRY</b>';
+  }
   
   return `${header}
 

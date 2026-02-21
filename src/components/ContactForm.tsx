@@ -11,7 +11,7 @@ import { toast } from 'sonner';
 interface ContactFormProps {
   productName?: string;
   productId?: string;
-  type: 'contact' | 'order';
+  type: 'contact' | 'order' | 'inquiry';
   hideEmail?: boolean;
   onSuccess?: () => void;
 }
@@ -54,10 +54,7 @@ export const ContactForm = ({
         type: type,
       });
 
-      const telegramSent = await sendTelegramNotification(telegramMessage);
-      if (!telegramSent) {
-        console.warn('Telegram notification failed but form was submitted to database');
-      }
+      await sendTelegramNotification(telegramMessage);
 
       return submission;
     },
