@@ -184,13 +184,25 @@ const generateSitemap = (products, categories) => {
 const main = async () => {
   const { products, categories } = await fetchFromSupabase();
   
-  const sitemapPath = path.join(__dirname, '../public/sitemap.xml');
+  // Create dist directory if it doesn't exist (for production)
+  const distPath = path.join(__dirname, '../dist');
+  if (!fs.existsSync(distPath)) {
+    fs.mkdirSync(distPath, { recursive: true });
+  }
+  
+  // Write to both locations for development and production
+  const publicPath = path.join(__dirname, '../public/sitemap.xml');
+  const distSitemapPath = path.join(__dirname, '../dist/sitemap.xml');
+  
   const sitemap = generateSitemap(products, categories);
 
-  fs.writeFileSync(sitemapPath, sitemap, 'utf-8');
+  fs.writeFileSync(publicPath, sitemap, 'utf-8');
+  fs.writeFileSync(distSitemapPath, sitemap, 'utf-8');
   
   console.log('\n✓ Sitemap generated successfully!');
-  console.log(`📍 Location: ${sitemapPath}`);
+  console.log(`📍 Locations:`);
+  console.log(`   - Development: ${publicPath}`);
+  console.log(`   - Production: ${distSitemapPath}`);
   console.log(`📊 Statistics:`);
   console.log(`   - Static routes: ${staticRoutes.length}`);
   console.log(`   - Categories: ${categories.length}`);
