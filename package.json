@@ -10,7 +10,10 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "generate:sitemap": "node scripts/generate-sitemap.mjs",
+    "postinstall": "npm run generate:sitemap",
+    "prebuild": "npm run generate:sitemap"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

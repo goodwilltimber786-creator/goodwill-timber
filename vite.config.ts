@@ -10,6 +10,16 @@ export default defineConfig(({ mode }) => ({
     hmr: {
       overlay: false,
     },
+    middlewareMode: false,
+    // Fallback to index.html for SPA routing
+    historyApiFallback: {
+      rewrites: [
+        {
+          from: /.*/,
+          to: "/index.html",
+        },
+      ],
+    },
   },
   plugins: [react()],
   resolve: {
