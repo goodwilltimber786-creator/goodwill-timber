@@ -68,23 +68,18 @@ const ProductDetail = () => {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main>
-        {/* Breadcrumb */}
-        <section className="bg-muted py-4">
+      <main className="flex-1">
+        {/* Header - Matching Products page style */}
+        <section className="bg-primary py-12 md:py-16 lg:py-20">
           <div className="container mx-auto px-4">
-            <nav className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Link to="/" className="hover:text-foreground transition-colors">
-                Home
-              </Link>
-              <ChevronRight className="h-4 w-4" />
-              <Link to="/products" className="hover:text-foreground transition-colors">
-                Products
-              </Link>
-              <ChevronRight className="h-4 w-4" />
-              <span className="text-foreground font-medium">{product.name}</span>
-            </nav>
+            <h1 className="text-2xl md:text-3xl lg:text-5xl font-display font-bold text-primary-foreground text-center">
+              {product.name}
+            </h1>
+            <p className="text-primary-foreground/70 text-center max-w-2xl mx-auto mt-3 md:mt-4 text-sm md:text-base">
+              {getCategoryName(product.category_id)} • Premium Quality
+            </p>
           </div>
         </section>
 
@@ -109,15 +104,6 @@ const ProductDetail = () => {
 
               {/* Details */}
               <div className="space-y-6">
-                <div>
-                  <span className="text-sm font-medium text-accent uppercase tracking-wider">
-                    {getCategoryName(product.category_id)}
-                  </span>
-                  <h1 className="text-3xl md:text-4xl font-display font-bold text-foreground mt-2">
-                    {product.name}
-                  </h1>
-                </div>
-
                 {/* Price */}
                 <div className="bg-gradient-to-r from-primary/10 to-accent/10 rounded-lg p-6 border border-primary/20">
                   <p className="text-muted-foreground text-sm mb-1">Price</p>

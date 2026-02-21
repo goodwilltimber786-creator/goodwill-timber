@@ -4,6 +4,7 @@ import { categoryService, productService } from '@/lib/api';
 import { ChevronDown } from 'lucide-react';
 import { CheckoutModal } from '@/components/CheckoutModal';
 import { ContactForm } from '@/components/ContactForm';
+import { ProductDetailsModal } from '@/components/ProductDetailsModal';
 import {
   Dialog,
   DialogContent,
@@ -19,10 +20,14 @@ interface ProductModalProps {
 export const ProductsSidebar = ({ whatsappNumber }: ProductModalProps) => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
   const [showMobileCategories, setShowMobileCategories] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
+  const [showProductDetails, setShowProductDetails] = useState(false);
   const [checkoutProduct, setCheckoutProduct] = useState<{
     open: boolean;
     product?: { id: string; name: string; price: number };
     mode?: 'buy' | 'inquiry';
+    selectedItems?: any[];
+    metadata?: any;
   }>({ open: false });
   const [inquiryModal, setInquiryModal] = useState<{
     open: boolean;
@@ -184,7 +189,11 @@ export const ProductsSidebar = ({ whatsappNumber }: ProductModalProps) => {
               {displayProducts.map((product) => (
               <div
                 key={product.id}
-                className="bg-card rounded border border-border overflow-hidden hover:shadow-md transition-shadow"
+                onClick={() => {
+                  setSelectedProduct(product);
+                  setShowProductDetails(true);
+                }}
+                className="bg-card rounded border border-border overflow-hidden hover:shadow-md transition-shadow cursor-pointer hover:border-primary/50"
               >
                 {/* Product Image */}
                 {product.image_path && (
@@ -355,6 +364,29 @@ export const ProductsSidebar = ({ whatsappNumber }: ProductModalProps) => {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Product Details Modal */}
+      <ProductDetailsModal
+        open={showProductDetails}
+        onOpenChange={setShowProductDetails}
+        product={selectedProduct}
+        whatsappNumber={whatsappNumber}
+        onBuyNow={(selectedProducts: any, metadata: any) => {
+          // selectedProducts can be an array or a single product
+          const mainProduct = Array.isArray(selectedProducts) ? selectedProducts[0] : selectedProducts;
+          setCheckoutProduct({
+            open: true,
+            product: {
+              id: mainProduct.id,
+              name: mainProduct.name,
+              price: metadata?.totalPrice || mainProduct.price,
+            },
+            mode: 'buy',
+            selectedItems: selectedProducts,
+            metadata: metadata,
+          });
+        }}
+      />
     </div>
   );
 };

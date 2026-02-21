@@ -172,6 +172,9 @@ const generateSitemap = (products, categories) => {
     xml += `    <lastmod>${currentDate}</lastmod>\n`;
     xml += '    <changefreq>weekly</changefreq>\n';
     xml += `    <priority>${product.priority || '0.8'}</priority>\n`;
+    
+    // Add product title and description for SEO
+    xml += `    <title>${product.name} - Product Variants</title>\n`;
     xml += '  </url>\n';
   });
 

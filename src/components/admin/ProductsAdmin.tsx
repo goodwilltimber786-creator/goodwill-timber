@@ -28,8 +28,15 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Trash2, Edit2, Plus, Upload } from 'lucide-react';
+import { Trash2, Edit2, Plus, Upload, X } from 'lucide-react';
 import { toast } from 'sonner';
+
+interface ProductVariant {
+  id: string;
+  dimension: string; // Changed from optional to required, single dimension per variant
+  price?: number;
+  sku?: string;
+}
 
 interface ProductForm {
   name: string;
@@ -37,9 +44,12 @@ interface ProductForm {
   price: number;
   category_id: string;
   image_path: string;
+  sku?: string;
+  dimensions?: string;
   has_buy_now: boolean;
   has_contact_us: boolean;
   is_featured: boolean;
+  variants: ProductVariant[];
 }
 
 export const ProductsAdmin = () => {
@@ -51,9 +61,19 @@ export const ProductsAdmin = () => {
     price: 0,
     category_id: '',
     image_path: '',
+    sku: '',
+    dimensions: '',
     has_buy_now: true,
     has_contact_us: true,
     is_featured: false,
+    variants: [
+      {
+        id: '1',
+        dimension: '',
+        price: 0,
+        sku: '',
+      },
+    ],
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>('');
@@ -79,9 +99,12 @@ export const ProductsAdmin = () => {
         price: data.price,
         category_id: data.category_id,
         image_path: data.image_path || null,
+        sku: data.sku || null,
+        dimensions: data.dimensions || null,
         has_buy_now: data.has_buy_now,
         has_contact_us: data.has_contact_us,
         is_featured: data.is_featured,
+        variants: data.variants,
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
@@ -94,6 +117,14 @@ export const ProductsAdmin = () => {
         has_buy_now: true,
         has_contact_us: true,
         is_featured: false,
+        variants: [
+          {
+            id: '1',
+            dimension: '',
+            price: 0,
+            sku: '',
+          },
+        ],
       });
       setImageFile(null);
       setImagePreview('');
@@ -113,9 +144,12 @@ export const ProductsAdmin = () => {
         price: data.price,
         category_id: data.category_id,
         image_path: data.image_path || null,
+        sku: data.sku || null,
+        dimensions: data.dimensions || null,
         has_buy_now: data.has_buy_now,
         has_contact_us: data.has_contact_us,
         is_featured: data.is_featured,
+        variants: data.variants,
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
@@ -129,6 +163,14 @@ export const ProductsAdmin = () => {
         has_buy_now: true,
         has_contact_us: true,
         is_featured: false,
+        variants: [
+          {
+            id: '1',
+            dimension: '',
+            price: 0,
+            sku: '',
+          },
+        ],
       });
       setImageFile(null);
       setImagePreview('');
@@ -166,15 +208,49 @@ export const ProductsAdmin = () => {
   const handleEdit = (productId: string) => {
     const product = products.find((p) => p.id === productId);
     if (product) {
+      let productVariants = [];
+      
+      // Parse variants - handle both array and stringified JSON
+      if ((product as any).variants) {
+        const variants = (product as any).variants;
+        if (Array.isArray(variants)) {
+          // Variants is already an array
+          productVariants = variants.map((v: any) => {
+            const variantObj = typeof v === 'string' ? JSON.parse(v) : v;
+            return {
+              id: variantObj.id || `v-${Date.now()}-${Math.random()}`,
+              dimension: variantObj.dimension || '',
+              price: variantObj.price ?? 0,
+              sku: variantObj.sku || '',
+            };
+          });
+        }
+      }
+      
+      // If no variants, create empty one
+      if (productVariants.length === 0) {
+        productVariants = [
+          {
+            id: '1',
+            dimension: '',
+            price: 0,
+            sku: '',
+          },
+        ];
+      }
+      
       setFormData({
         name: product.name,
         description: product.description || '',
         price: product.price,
         category_id: product.category_id,
         image_path: product.image_path || '',
+        sku: (product as any).sku || '',
+        dimensions: (product as any).dimensions || '',
         has_buy_now: product.has_buy_now,
         has_contact_us: product.has_contact_us,
         is_featured: product.is_featured,
+        variants: productVariants,
       });
       setImagePreview(product.image_path || '');
       setEditingId(productId);
@@ -193,6 +269,13 @@ export const ProductsAdmin = () => {
     }
     if (formData.price < 0) {
       toast.error('Price cannot be negative');
+      return;
+    }
+    
+    // Validate: either base price is set OR at least one variant with dimension and price
+    const hasValidVariant = formData.variants.some(v => v.dimension && (v.price ?? 0) > 0);
+    if (formData.price <= 0 && !hasValidVariant) {
+      toast.error('Either set a base price or add at least one variant with dimension and price');
       return;
     }
 
@@ -233,9 +316,19 @@ export const ProductsAdmin = () => {
         price: 0,
         category_id: '',
         image_path: '',
+        sku: '',
+        dimensions: '',
         has_buy_now: true,
         has_contact_us: true,
         is_featured: false,
+        variants: [
+          {
+            id: '1',
+            dimension: '',
+            price: 0,
+            sku: '',
+          },
+        ],
       });
       setImageFile(null);
       setImagePreview('');
@@ -245,6 +338,43 @@ export const ProductsAdmin = () => {
   const getCategoryName = (categoryId: string) => {
     return categories.find((c) => c.id === categoryId)?.name || 'Unknown';
   };
+
+  const handleVariantChange = (index: number, field: keyof ProductVariant, value: string | number) => {
+    const newVariants = [...formData.variants];
+    newVariants[index] = {
+      ...newVariants[index],
+      [field]: field === 'price' ? Number(value) : value,
+    };
+    setFormData({ ...formData, variants: newVariants });
+  };
+
+  const addVariant = () => {
+    setFormData({
+      ...formData,
+      variants: [
+        ...formData.variants,
+        {
+          id: Date.now().toString(),
+          dimension: '',
+          price: 0,
+          sku: '',
+        },
+      ],
+    });
+  };
+
+  const removeVariant = (index: number) => {
+    if (formData.variants.length > 1) {
+      setFormData({
+        ...formData,
+        variants: formData.variants.filter((_, i) => i !== index),
+      });
+    } else {
+      toast.error('Product must have at least one variant');
+    }
+  };
+
+  const colors = ['Natural', 'Brown', 'Dark Brown', 'Light Brown', 'White', 'Black', 'Red', 'Custom'];
 
   if (isLoadingProducts) {
     return <div className="text-center py-8">Loading products...</div>;
@@ -270,7 +400,7 @@ export const ProductsAdmin = () => {
                 {editingId ? '✏️ Edit Product' : '➕ Add New Product'}
               </DialogTitle>
             </DialogHeader>
-            <div className="space-y-4 max-h-96 overflow-y-auto">
+            <div className="space-y-4 max-h-[60vh] overflow-y-auto">
               <div>
                 <label className="block text-sm font-medium text-primary mb-2">
                   Product Name *
@@ -303,22 +433,6 @@ export const ProductsAdmin = () => {
                     ))}
                   </SelectContent>
                 </Select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-primary mb-2">
-                  Price (₹) *
-                </label>
-                <Input
-                  type="number"
-                  value={formData.price}
-                  onChange={(e) =>
-                    setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })
-                  }
-                  placeholder="0"
-                  min="0"
-                  className="border-border focus:border-accent focus:ring-accent"
-                />
               </div>
 
               <div>
@@ -360,6 +474,110 @@ export const ProductsAdmin = () => {
                       className="hidden"
                     />
                   </label>
+                </div>
+              </div>
+
+              {/* Base Price, SKU, Dimensions */}
+              <div>
+                <label className="block text-sm font-medium text-primary mb-2">
+                  Base Price *
+                </label>
+                <Input
+                  type="number"
+                  value={formData.price || ''}
+                  onChange={(e) =>
+                    setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })
+                  }
+                  placeholder="e.g., 5000"
+                  className="border-border focus:border-accent focus:ring-accent"
+                  min="0"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-sm font-medium text-primary mb-2">
+                    Base SKU
+                  </label>
+                  <Input
+                    type="text"
+                    value={formData.sku || ''}
+                    onChange={(e) =>
+                      setFormData({ ...formData, sku: e.target.value })
+                    }
+                    placeholder="e.g., TEAK-001"
+                    className="border-border focus:border-accent focus:ring-accent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-primary mb-2">
+                    Base Dimensions
+                  </label>
+                  <Input
+                    type="text"
+                    value={formData.dimensions || ''}
+                    onChange={(e) =>
+                      setFormData({ ...formData, dimensions: e.target.value })
+                    }
+                    placeholder="e.g., 2x4x8 ft"
+                    className="border-border focus:border-accent focus:ring-accent"
+                  />
+                </div>
+              </div>
+
+              {/* Variants Section */}
+              <div className="border-t border-border pt-4">
+                <div className="flex justify-between items-center mb-4">
+                  <label className="text-sm font-medium text-primary">Product Variants</label>
+                  <button
+                    type="button"
+                    onClick={addVariant}
+                    className="flex items-center gap-2 bg-accent text-accent-foreground px-3 py-1 rounded text-sm hover:bg-accent/90 transition"
+                  >
+                    <Plus className="w-4 h-4" />
+                    Add Variant
+                  </button>
+                </div>
+
+                <div className="space-y-3">
+                  {formData.variants.map((variant, index) => (
+                    <div key={variant.id} className="border border-border rounded-lg p-3 bg-muted/20">
+                      <div className="grid grid-cols-2 gap-2 mb-2">
+                        <Input
+                          type="text"
+                          placeholder="Dimension *"
+                          value={variant.dimension || ''}
+                          onChange={(e) => handleVariantChange(index, 'dimension', e.target.value)}
+                          className="text-sm border-border focus:border-accent focus:ring-accent"
+                        />
+                        <Input
+                          type="number"
+                          placeholder="Price *"
+                          value={variant.price || ''}
+                          onChange={(e) => handleVariantChange(index, 'price', e.target.value)}
+                          className="text-sm border-border focus:border-accent focus:ring-accent"
+                          min="0"
+                        />
+                        <Input
+                          type="text"
+                          placeholder="SKU (Optional)"
+                          value={variant.sku || ''}
+                          onChange={(e) => handleVariantChange(index, 'sku', e.target.value)}
+                          className="text-sm border-border focus:border-accent focus:ring-accent col-span-2"
+                        />
+                      </div>
+                      {formData.variants.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removeVariant(index)}
+                          className="w-full text-destructive hover:bg-destructive/10 rounded px-2 py-1 text-sm transition flex items-center justify-center gap-2"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                          Remove
+                        </button>
+                      )}
+                    </div>
+                  ))}
                 </div>
               </div>
 

@@ -18,6 +18,13 @@ export type Category = {
   created_at: string;
 };
 
+export type ProductVariant = {
+  id: string;
+  dimension: string;
+  price?: number;
+  sku?: string;
+};
+
 export type Product = {
   id: string;
   name: string;
@@ -25,9 +32,12 @@ export type Product = {
   price: number;
   category_id: string;
   image_path: string | null;
+  dimensions?: string | null;
+  sku?: string | null;
   has_buy_now: boolean;
   has_contact_us: boolean;
   is_featured: boolean;
+  variants?: ProductVariant[] | null;
   created_at: string;
 };
 
