@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <defs>
+    <!-- Wood texture gradient -->
+    <linearGradient id="woodGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B6F47;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#6B5344;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3D3428;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Gold gradient for text -->
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFE87C;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#E8D04A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#D4AF37;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Shadow filter -->
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Wood panel background -->
+  <rect width="256" height="256" fill="url(#woodGradient)"/>
+  
+  <!-- Wood grain texture -->
+  <rect width="256" height="256" fill="url(#woodGradient)" opacity="0.8"/>
+  
+  <!-- Top accent stripe -->
+  <rect x="0" y="0" width="256" height="8" fill="#D4AF37" opacity="0.95"/>
+  
+  <!-- Bottom accent stripe -->
+  <rect x="0" y="248" width="256" height="8" fill="#D4AF37" opacity="0.95"/>
+  
+  <!-- GT Text with serif font and gold gradient -->
+  <text 
+    x="128" 
+    y="155" 
+    font-family="Georgia, 'Times New Roman', serif" 
+    font-size="110" 
+    font-weight="700"
+    text-anchor="middle" 
+    fill="url(#goldGradient)"
+    letter-spacing="2"
+    filter="url(#shadow)"
+  >GT</text>
+  
+  <!-- Bottom decorative line -->
+  <line x1="50" y1="185" x2="206" y2="185" stroke="#D4AF37" stroke-width="2" opacity="0.7"/>
+  
+  <!-- Corner accents -->
+  <rect x="20" y="20" width="30" height="3" fill="#D4AF37" opacity="0.6"/>
+  <rect x="206" y="20" width="30" height="3" fill="#D4AF37" opacity="0.6"/>
+</svg>
