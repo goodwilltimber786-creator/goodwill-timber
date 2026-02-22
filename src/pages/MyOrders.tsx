@@ -28,10 +28,16 @@ export const MyOrders = () => {
   const [copied, setCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Fetch all orders from database (non-sensitive query)
+  // Fetch all submissions from database (orders, inquiries, contacts)
   const { data: dbOrders = [] } = useQuery({
-    queryKey: ['orders-from-db'],
-    queryFn: () => contactService.getByType('order'),
+    queryKey: ['submissions-from-db'],
+    queryFn: async () => {
+      // Fetch all submission types
+      const orders = await contactService.getByType('order');
+      const inquiries = await contactService.getByType('inquiry');
+      const contacts = await contactService.getByType('contact');
+      return [...orders, ...inquiries, ...contacts];
+    },
   });
 
   const handleSearch = async (e: React.FormEvent) => {
@@ -52,21 +58,21 @@ export const MyOrders = () => {
         status: 'pending',
       }));
 
-      // 2. Get database orders for this phone
-      const dbOrdersForPhone = dbOrders.filter(
-        (order) => order.phone === phone && order.submission_type === 'order'
+      // 2. Get database submissions for this phone (all types: orders, inquiries, contacts)
+      const dbSubmissionsForPhone = dbOrders.filter(
+        (submission) => submission.phone === phone
       );
 
-      // Combine and deduplicate (prefer DB orders as they're more recent)
+      // Combine and deduplicate (prefer DB submissions as they're more recent)
       const combinedOrders = [
-        ...dbOrdersForPhone.map((order) => ({
-          ...order,
+        ...dbSubmissionsForPhone.map((submission) => ({
+          ...submission,
           source: 'database',
-          timestamp: new Date(order.created_at).getTime(),
+          timestamp: new Date(submission.created_at).getTime(),
         })),
         ...cachedOrders.filter(
           (cached) =>
-            !dbOrdersForPhone.some(
+            !dbSubmissionsForPhone.some(
               (db) =>
                 db.created_at &&
                 Math.abs(new Date(db.created_at).getTime() - cached.timestamp) < 5000
@@ -142,8 +148,8 @@ export const MyOrders = () => {
         <div className="container mx-auto px-4 py-8 md:py-12 max-w-4xl">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">My Orders</h1>
-            <p className="text-gray-600 text-sm">View your orders by phone number - no login required</p>
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">My Submissions</h1>
+            <p className="text-gray-600 text-sm">View your orders, inquiries and contacts by phone number - no login required</p>
           </div>
 
           {/* Search Card */}
@@ -175,13 +181,13 @@ export const MyOrders = () => {
           </Card>
 
         {/* Results */}
-        {searched && (
+      {searched && (
           <>
             {orders.length > 0 ? (
               <div className="space-y-4">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-lg font-semibold text-gray-900">
-                    {orders.length} {orders.length === 1 ? 'order' : 'orders'} found
+                    {orders.length} {orders.length === 1 ? 'submission' : 'submissions'} found
                   </h2>
                   <Button
                     variant="outline"
@@ -202,10 +208,26 @@ export const MyOrders = () => {
                   const orderDate = isFromDatabase
                     ? new Date(order.created_at)
                     : new Date(order.timestamp);
+                  const submissionType = isFromDatabase 
+                    ? (order.submission_type || 'order') 
+                    : 'order';
                   const productName = isFromDatabase ? order.product_name : order.productName;
                   const quantity = isFromDatabase ? order.quantity : order.quantity;
                   const amount = isFromDatabase ? order.total_amount : order.totalAmount;
                   const status = order.status || 'pending';
+
+                  // Get display label for submission type
+                  const getSubmissionTypeLabel = (type: string) => {
+                    switch (type) {
+                      case 'inquiry':
+                        return 'Inquiry';
+                      case 'contact':
+                        return 'Contact';
+                      case 'order':
+                      default:
+                        return 'Order';
+                    }
+                  };
 
                   // For cached orders, show expiration; for DB orders, show status
                   const displayLabel = isFromDatabase
@@ -214,7 +236,6 @@ export const MyOrders = () => {
                   const displayColor = isFromDatabase
                     ? getStatusColor(status)
                     : getExpirationStatus(order.expiresAt).color;
-                  const sourceLabel = isFromDatabase ? 'Database' : 'Cached';
 
                   return (
                     <Card
@@ -227,21 +248,25 @@ export const MyOrders = () => {
                           <div className="flex-1">
                             <div className="flex items-center gap-3 mb-3">
                               <h3 className="font-semibold text-gray-900">{productName}</h3>
-                              <span className="text-xs px-2 py-1 bg-gray-100 text-gray-700 rounded">
-                                {sourceLabel}
-                              </span>
+                              <Badge variant="secondary" className="text-xs">
+                                {getSubmissionTypeLabel(submissionType)}
+                              </Badge>
                             </div>
                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
-                              <div>
-                                <p className="text-gray-500 text-xs">Quantity</p>
-                                <p className="text-gray-900 font-medium">{quantity} unit(s)</p>
-                              </div>
-                              <div>
-                                <p className="text-gray-500 text-xs">Total</p>
-                                <p className="text-gray-900 font-medium">
-                                  ₹{typeof amount === 'number' ? amount.toLocaleString('en-IN') : amount}
-                                </p>
-                              </div>
+                              {quantity && (
+                                <div>
+                                  <p className="text-gray-500 text-xs">Quantity</p>
+                                  <p className="text-gray-900 font-medium">{quantity} unit(s)</p>
+                                </div>
+                              )}
+                              {amount && (
+                                <div>
+                                  <p className="text-gray-500 text-xs">Total</p>
+                                  <p className="text-gray-900 font-medium">
+                                    ₹{typeof amount === 'number' ? amount.toLocaleString('en-IN') : amount}
+                                  </p>
+                                </div>
+                              )}
                               <div>
                                 <p className="text-gray-500 text-xs">Date</p>
                                 <p className="text-gray-900 font-medium">
