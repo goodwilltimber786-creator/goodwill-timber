@@ -25,20 +25,29 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     {
-      name: 'copy-sitemap',
+      name: 'copy-public-files',
       apply: 'build',
       enforce: 'post',
-      generateBundle() {
-        // Copy sitemap.xml from dist to root output directory
-        const sitemapPath = path.join(__dirname, 'dist/sitemap.xml');
-        if (fs.existsSync(sitemapPath)) {
-          const content = fs.readFileSync(sitemapPath, 'utf-8');
-          this.emitFile({
-            type: 'asset',
-            fileName: 'sitemap.xml',
-            source: content,
-          });
+      closeBundle: async () => {
+        // Copy sitemap.xml and robots.txt from public to dist
+        const filesToCopy = ['sitemap.xml', 'robots.txt'];
+        const distDir = path.join(__dirname, 'dist');
+        const publicDir = path.join(__dirname, 'public');
+
+        // Ensure dist directory exists
+        if (!fs.existsSync(distDir)) {
+          fs.mkdirSync(distDir, { recursive: true });
         }
+
+        filesToCopy.forEach((file) => {
+          const src = path.join(publicDir, file);
+          const dest = path.join(distDir, file);
+          
+          if (fs.existsSync(src)) {
+            fs.copyFileSync(src, dest);
+            console.log(`✓ Copied ${file} to dist/`);
+          }
+        });
       },
     },
   ],

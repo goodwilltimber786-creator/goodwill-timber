@@ -19,6 +19,9 @@ const getCurrentDate = () => {
   return date.toISOString().split('T')[0];
 };
 
+// Domain configuration
+const DOMAIN = 'https://www.goodwilltimbers.in';
+
 // Define all static routes
 const staticRoutes = [
   { loc: '/', priority: '1.0', changefreq: 'weekly' },
@@ -148,7 +151,7 @@ const generateSitemap = (products, categories) => {
   // Add static routes
   staticRoutes.forEach((route) => {
     xml += '  <url>\n';
-    xml += `    <loc>https://goodwilltimbers.com${route.loc}</loc>\n`;
+    xml += `    <loc>${DOMAIN}${route.loc}</loc>\n`;
     xml += `    <lastmod>${currentDate}</lastmod>\n`;
     xml += `    <changefreq>${route.changefreq}</changefreq>\n`;
     xml += `    <priority>${route.priority}</priority>\n`;
@@ -158,7 +161,7 @@ const generateSitemap = (products, categories) => {
   // Add category routes
   categories.forEach((category) => {
     xml += '  <url>\n';
-    xml += `    <loc>https://goodwilltimbers.com/categories/${category.id || category.slug}</loc>\n`;
+    xml += `    <loc>${DOMAIN}/categories/${category.id || category.slug}</loc>\n`;
     xml += `    <lastmod>${currentDate}</lastmod>\n`;
     xml += `    <changefreq>${category.changefreq || 'weekly'}</changefreq>\n`;
     xml += `    <priority>${category.priority || '0.8'}</priority>\n`;
@@ -168,7 +171,7 @@ const generateSitemap = (products, categories) => {
   // Add product routes
   products.forEach((product) => {
     xml += '  <url>\n';
-    xml += `    <loc>https://goodwilltimbers.com/products/${product.id}</loc>\n`;
+    xml += `    <loc>${DOMAIN}/products/${product.id}</loc>\n`;
     xml += `    <lastmod>${currentDate}</lastmod>\n`;
     xml += '    <changefreq>weekly</changefreq>\n';
     xml += `    <priority>${product.priority || '0.8'}</priority>\n`;

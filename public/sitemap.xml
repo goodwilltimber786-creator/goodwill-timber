@@ -2,165 +2,180 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
          xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>https://goodwilltimbers.com/</loc>
-    <lastmod>2026-02-21</lastmod>
+    <loc>https://www.goodwilltimbers.in/</loc>
+    <lastmod>2026-02-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://goodwilltimbers.com/categories</loc>
-    <lastmod>2026-02-21</lastmod>
+    <loc>https://www.goodwilltimbers.in/categories</loc>
+    <lastmod>2026-02-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://goodwilltimbers.com/products</loc>
-    <lastmod>2026-02-21</lastmod>
+    <loc>https://www.goodwilltimbers.in/products</loc>
+    <lastmod>2026-02-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://goodwilltimbers.com/about</loc>
-    <lastmod>2026-02-21</lastmod>
+    <loc>https://www.goodwilltimbers.in/about</loc>
+    <lastmod>2026-02-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://goodwilltimbers.com/contact</loc>
-    <lastmod>2026-02-21</lastmod>
+    <loc>https://www.goodwilltimbers.in/contact</loc>
+    <lastmod>2026-02-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://goodwilltimbers.com/my-orders</loc>
-    <lastmod>2026-02-21</lastmod>
+    <loc>https://www.goodwilltimbers.in/my-orders</loc>
+    <lastmod>2026-02-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://goodwilltimbers.com/categories/timber</loc>
-    <lastmod>2026-02-21</lastmod>
+    <loc>https://www.goodwilltimbers.in/categories/timber</loc>
+    <lastmod>2026-02-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://goodwilltimbers.com/categories/plywood</loc>
-    <lastmod>2026-02-21</lastmod>
+    <loc>https://www.goodwilltimbers.in/categories/plywood</loc>
+    <lastmod>2026-02-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://goodwilltimbers.com/categories/doors</loc>
-    <lastmod>2026-02-21</lastmod>
+    <loc>https://www.goodwilltimbers.in/categories/doors</loc>
+    <lastmod>2026-02-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://goodwilltimbers.com/categories/hardware</loc>
-    <lastmod>2026-02-21</lastmod>
+    <loc>https://www.goodwilltimbers.in/categories/hardware</loc>
+    <lastmod>2026-02-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://goodwilltimbers.com/categories/fittings</loc>
-    <lastmod>2026-02-21</lastmod>
+    <loc>https://www.goodwilltimbers.in/categories/fittings</loc>
+    <lastmod>2026-02-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://goodwilltimbers.com/categories/bulk</loc>
-    <lastmod>2026-02-21</lastmod>
+    <loc>https://www.goodwilltimbers.in/categories/bulk</loc>
+    <lastmod>2026-02-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://goodwilltimbers.com/products/hw-001</loc>
-    <lastmod>2026-02-21</lastmod>
+    <loc>https://www.goodwilltimbers.in/products/hw-001</loc>
+    <lastmod>2026-02-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <title>Door Handles - Stainless Steel - Product Variants</title>
   </url>
   <url>
-    <loc>https://goodwilltimbers.com/products/hw-002</loc>
-    <lastmod>2026-02-21</lastmod>
+    <loc>https://www.goodwilltimbers.in/products/hw-002</loc>
+    <lastmod>2026-02-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <title>Door Hinges - Heavy Duty - Product Variants</title>
   </url>
   <url>
-    <loc>https://goodwilltimbers.com/products/hw-003</loc>
-    <lastmod>2026-02-21</lastmod>
+    <loc>https://www.goodwilltimbers.in/products/hw-003</loc>
+    <lastmod>2026-02-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <title>Locks - Mortise Locks - Product Variants</title>
   </url>
   <url>
-    <loc>https://goodwilltimbers.com/products/hw-004</loc>
-    <lastmod>2026-02-21</lastmod>
+    <loc>https://www.goodwilltimbers.in/products/hw-004</loc>
+    <lastmod>2026-02-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <title>Bolts & Latches - Product Variants</title>
   </url>
   <url>
-    <loc>https://goodwilltimbers.com/products/hw-005</loc>
-    <lastmod>2026-02-21</lastmod>
+    <loc>https://www.goodwilltimbers.in/products/hw-005</loc>
+    <lastmod>2026-02-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
+    <title>Cabinet Handles - Product Variants</title>
   </url>
   <url>
-    <loc>https://goodwilltimbers.com/products/tm-001</loc>
-    <lastmod>2026-02-21</lastmod>
+    <loc>https://www.goodwilltimbers.in/products/tm-001</loc>
+    <lastmod>2026-02-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <title>Teak Wood - Premium Grade - Product Variants</title>
   </url>
   <url>
-    <loc>https://goodwilltimbers.com/products/tm-002</loc>
-    <lastmod>2026-02-21</lastmod>
+    <loc>https://www.goodwilltimbers.in/products/tm-002</loc>
+    <lastmod>2026-02-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <title>Sal Wood - Construction Grade - Product Variants</title>
   </url>
   <url>
-    <loc>https://goodwilltimbers.com/products/tm-003</loc>
-    <lastmod>2026-02-21</lastmod>
+    <loc>https://www.goodwilltimbers.in/products/tm-003</loc>
+    <lastmod>2026-02-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
+    <title>Pine Wood - Budget Friendly - Product Variants</title>
   </url>
   <url>
-    <loc>https://goodwilltimbers.com/products/ply-001</loc>
-    <lastmod>2026-02-21</lastmod>
+    <loc>https://www.goodwilltimbers.in/products/ply-001</loc>
+    <lastmod>2026-02-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <title>BWP Grade Plywood - Product Variants</title>
   </url>
   <url>
-    <loc>https://goodwilltimbers.com/products/ply-002</loc>
-    <lastmod>2026-02-21</lastmod>
+    <loc>https://www.goodwilltimbers.in/products/ply-002</loc>
+    <lastmod>2026-02-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <title>MR Grade Plywood - Product Variants</title>
   </url>
   <url>
-    <loc>https://goodwilltimbers.com/products/ply-003</loc>
-    <lastmod>2026-02-21</lastmod>
+    <loc>https://www.goodwilltimbers.in/products/ply-003</loc>
+    <lastmod>2026-02-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
+    <title>Decorative Plywood - Product Variants</title>
   </url>
   <url>
-    <loc>https://goodwilltimbers.com/products/dr-001</loc>
-    <lastmod>2026-02-21</lastmod>
+    <loc>https://www.goodwilltimbers.in/products/dr-001</loc>
+    <lastmod>2026-02-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <title>Flush Doors - Wooden - Product Variants</title>
   </url>
   <url>
-    <loc>https://goodwilltimbers.com/products/dr-002</loc>
-    <lastmod>2026-02-21</lastmod>
+    <loc>https://www.goodwilltimbers.in/products/dr-002</loc>
+    <lastmod>2026-02-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <title>Panel Doors - Product Variants</title>
   </url>
   <url>
-    <loc>https://goodwilltimbers.com/products/ft-001</loc>
-    <lastmod>2026-02-21</lastmod>
+    <loc>https://www.goodwilltimbers.in/products/ft-001</loc>
+    <lastmod>2026-02-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <title>Hinges & Brackets - Product Variants</title>
   </url>
   <url>
-    <loc>https://goodwilltimbers.com/products/ft-002</loc>
-    <lastmod>2026-02-21</lastmod>
+    <loc>https://www.goodwilltimbers.in/products/ft-002</loc>
+    <lastmod>2026-02-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <title>Door Closers - Product Variants</title>
   </url>
 </urlset>

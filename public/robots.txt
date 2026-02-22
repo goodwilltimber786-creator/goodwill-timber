@@ -17,4 +17,4 @@ Disallow: /admin
 Disallow: /api
 Disallow: /.env
 
-Sitemap: https://goodwilltimbers.com/sitemap.xml
+Sitemap: https://www.goodwilltimbers.in/sitemap.xml
