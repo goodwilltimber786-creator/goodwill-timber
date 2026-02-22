@@ -8,6 +8,7 @@
    { name: "Categories", path: "/categories" },
    { name: "About Us", path: "/about" },
    { name: "Contact", path: "/contact" },
+   { name: "Login", path: "/admin/login" },
  ];
  
  export function Footer() {
