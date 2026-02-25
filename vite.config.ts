@@ -29,8 +29,19 @@ export default defineConfig(({ mode }) => ({
       apply: 'build',
       enforce: 'post',
       closeBundle: async () => {
-        // Copy sitemap.xml and robots.txt from public to dist
-        const filesToCopy = ['sitemap.xml', 'robots.txt'];
+        // Copy important files from public to dist
+        const filesToCopy = [
+          'sitemap.xml', 
+          'robots.txt',
+          'favicon.ico',
+          'favicon.svg',
+          'favicon-16x16.png',
+          'favicon-32x32.png',
+          'apple-touch-icon.png',
+          'android-chrome-192x192.png',
+          'android-chrome-512x512.png',
+          'site.webmanifest'
+        ];
         const distDir = path.join(__dirname, 'dist');
         const publicDir = path.join(__dirname, 'public');
 
