@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { categoryService, productService } from '@/lib/api';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, X, Filter } from 'lucide-react';
 import { CheckoutModal } from '@/components/CheckoutModal';
 import { ContactForm } from '@/components/ContactForm';
 import { ProductDetailsModal } from '@/components/ProductDetailsModal';
+import { ProductsFilter } from '@/components/ProductsFilter';
 import {
   Dialog,
   DialogContent,
@@ -20,8 +21,10 @@ interface ProductModalProps {
 export const ProductsSidebar = ({ whatsappNumber }: ProductModalProps) => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
   const [showMobileCategories, setShowMobileCategories] = useState(false);
+  const [showMobileFilter, setShowMobileFilter] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
   const [showProductDetails, setShowProductDetails] = useState(false);
+  const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
   const [checkoutProduct, setCheckoutProduct] = useState<{
     open: boolean;
     product?: { id: string; name: string; price: number };
@@ -58,67 +61,19 @@ export const ProductsSidebar = ({ whatsappNumber }: ProductModalProps) => {
   return (
     <div className="flex flex-col lg:flex-row gap-0 min-h-[calc(100vh-250px)]">
       {/* Desktop Sidebar - Hidden on mobile */}
-      <div className="hidden lg:flex w-64 bg-background border-r border-border overflow-hidden flex-col" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+      <div className="hidden lg:flex w-80 bg-card border-r border-border overflow-hidden flex-col" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         <div className="flex-1 overflow-y-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           <style>{`
             div::-webkit-scrollbar { display: none; }
           `}</style>
-          <div className="p-6 space-y-6">
-            {categoriesLoading ? (
-              <div className="text-center py-8">
-                <p className="text-muted-foreground">Loading categories...</p>
-              </div>
-            ) : categories.length === 0 ? (
-              <div className="text-center py-8">
-                <p className="text-muted-foreground">No categories available</p>
-              </div>
-            ) : (
-              categories.map((category) => {
-                const products = getProductsByCategory(category.id);
-                return (
-                  <div key={category.id} className="space-y-3">
-                    <div className="flex items-start gap-3 pb-3 border-b border-border">
-                      <div className="w-12 h-12 rounded overflow-hidden flex-shrink-0 bg-muted flex items-center justify-center">
-                        {category.image_path ? (
-                          <img
-                            src={category.image_path}
-                            alt={category.name}
-                            className="w-12 h-12 object-cover"
-                          />
-                        ) : (
-                          <span className="text-lg">📦</span>
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-foreground text-sm">
-                          {category.name}
-                        </h3>
-                        <span className="inline-block mt-1 text-xs bg-muted text-muted-foreground px-2 py-1 rounded">
-                          {products.length} products
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="space-y-1 pl-4 border-l border-border">
-                      {products.map((product) => (
-                        <button
-                          key={product.id}
-                          className="w-full text-left py-2 px-3 rounded text-sm text-foreground hover:bg-muted transition-colors font-medium"
-                          title={product.name}
-                        >
-                          {product.name}
-                        </button>
-                      ))}
-                      {products.length === 0 && (
-                        <p className="text-xs text-muted-foreground py-2 px-3 italic">
-                          No products
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                );
-              })
-            )}
+          <div className="p-6">
+            {/* Desktop Filter */}
+            <ProductsFilter
+              products={selectedCategoryId ? getProductsByCategory(selectedCategoryId) : allProducts}
+              categories={categories}
+              onFilterChange={setFilteredProducts}
+              selectedCategory={selectedCategoryId}
+            />
           </div>
         </div>
       </div>
@@ -129,69 +84,45 @@ export const ProductsSidebar = ({ whatsappNumber }: ProductModalProps) => {
           div::-webkit-scrollbar { display: none; }
         `}</style>
 
-        {/* Mobile Category Filter */}
-        <div className="lg:hidden sticky top-0 z-10 bg-background border-b border-border">
+        {/* Mobile Filter Button */}
+        <div className="lg:hidden sticky top-0 z-10 bg-card border-b border-border">
           <button
-            onClick={() => setShowMobileCategories(!showMobileCategories)}
+            onClick={() => setShowMobileFilter(!showMobileFilter)}
             className="w-full flex items-center justify-between px-4 py-3 hover:bg-muted transition-colors"
           >
-            <span className="font-semibold text-foreground">
-              {selectedCategoryId
-                ? categories.find((c) => c.id === selectedCategoryId)?.name ||
-                  'Filter by Category'
-                : 'All Products'}
+            <span className="font-semibold text-foreground flex items-center gap-2">
+              <Filter className="h-4 w-4" />
+              Filters
             </span>
             <ChevronDown
               className={`w-5 h-5 text-muted-foreground transition-transform ${
-                showMobileCategories ? 'rotate-180' : ''
+                showMobileFilter ? 'rotate-180' : ''
               }`}
             />
           </button>
-
-          {showMobileCategories && (
-            <div className="border-t border-border bg-muted">
-              <button
-                onClick={() => {
-                  setSelectedCategoryId(null);
-                  setShowMobileCategories(false);
-                }}
-                className={`w-full text-left px-4 py-2.5 text-sm font-medium transition-colors ${
-                  !selectedCategoryId
-                    ? 'bg-primary/10 text-foreground'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-background'
-                }`}
-              >
-                All Products
-              </button>
-              {categories.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => {
-                    setSelectedCategoryId(category.id);
-                    setShowMobileCategories(false);
-                  }}
-                  className={`w-full text-left px-4 py-2.5 text-sm font-medium transition-colors ${
-                    selectedCategoryId === category.id
-                      ? 'bg-primary/10 text-foreground'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-background'
-                  }`}
-                >
-                  {category.name}
-                </button>
-              ))}
-            </div>
-          )}
         </div>
+
+        {/* Mobile Filter Panel */}
+        {showMobileFilter && (
+          <div className="lg:hidden bg-card border-b border-border p-4 md:p-6 max-h-96 overflow-y-auto">
+            <ProductsFilter
+              products={selectedCategoryId ? getProductsByCategory(selectedCategoryId) : allProducts}
+              categories={categories}
+              onFilterChange={setFilteredProducts}
+              selectedCategory={selectedCategoryId}
+            />
+          </div>
+        )}
 
         {/* Products Grid Content */}
         <div className="p-3 md:p-4 lg:p-6">
-          {displayProducts.length === 0 ? (
+          {filteredProducts.length === 0 ? (
             <div className="text-center py-16">
               <p className="text-muted-foreground text-lg">No products available</p>
             </div>
           ) : (
             <div className="grid gap-3 md:gap-4 lg:gap-5 grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {displayProducts.map((product) => (
+              {filteredProducts.map((product) => (
               <div
                 key={product.id}
                 onClick={() => {
@@ -211,7 +142,6 @@ export const ProductsSidebar = ({ whatsappNumber }: ProductModalProps) => {
                   ) : (
                     <div className="text-center">
                       <div className="text-3xl mb-1">🛠️</div>
-                      <span className="text-muted-foreground text-xs font-medium">{product.name}</span>
                     </div>
                   )}
                 </div>

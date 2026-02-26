@@ -62,7 +62,6 @@ const Categories = () => {
                         <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
                           <div className="text-center">
                             <div className="text-3xl mb-1">📦</div>
-                            <span className="text-muted-foreground text-xs font-medium">{category.name}</span>
                           </div>
                         </div>
                       )}

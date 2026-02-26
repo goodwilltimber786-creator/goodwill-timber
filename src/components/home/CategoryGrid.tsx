@@ -58,7 +58,7 @@ export function CategoryGrid() {
              <Link
                key={category.id}
                to={`/products?category=${category.id}`}
-               className="group relative overflow-hidden rounded-lg bg-card shadow-card card-hover"
+               className="group relative overflow-hidden rounded-lg bg-card shadow-card card-hover flex flex-col"
              >
                {/* Image */}
                <div className="aspect-square overflow-hidden bg-muted">
@@ -72,25 +72,38 @@ export function CategoryGrid() {
                    <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
                      <div className="text-center">
                        <div className="text-4xl mb-2">📦</div>
-                       <span className="text-muted-foreground text-sm font-medium">{category.name}</span>
                      </div>
                    </div>
                  )}
                </div>
 
-               {/* Content Overlay */}
-               <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent flex flex-col justify-end p-6">
-                 <h3 className="text-xl font-display font-bold text-primary-foreground mb-1">
-                   {category.name}
-                 </h3>
-                 <p className="text-sm text-primary-foreground/70 mb-3 line-clamp-2">
-                   {category.description || "Click to explore"}
-                 </p>
-                 <div className="flex items-center gap-2 text-accent text-sm font-medium opacity-0 translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
-                   View Products
-                   <ArrowRight className="h-4 w-4" />
+               {/* Content Overlay - Only show when image exists */}
+               {category.image_path && (
+                 <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent flex flex-col justify-end p-6">
+                   <h3 className="text-xl font-display font-bold text-primary-foreground mb-1">
+                     {category.name}
+                   </h3>
+                   <p className="text-sm text-primary-foreground/70 mb-3 line-clamp-2">
+                     {category.description || "Click to explore"}
+                   </p>
+                   <div className="flex items-center gap-2 text-accent text-sm font-medium opacity-0 translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                     View Products
+                     <ArrowRight className="h-4 w-4" />
+                   </div>
                  </div>
-               </div>
+               )}
+
+               {/* Content Below Image - Only show when no image */}
+               {!category.image_path && (
+                 <div className="p-4 flex flex-col justify-center flex-1">
+                   <h3 className="text-lg font-display font-bold text-foreground mb-1">
+                     {category.name}
+                   </h3>
+                   <p className="text-sm text-muted-foreground line-clamp-2">
+                     {category.description || "Click to explore"}
+                   </p>
+                 </div>
+               )}
              </Link>
            ))}
          </div>

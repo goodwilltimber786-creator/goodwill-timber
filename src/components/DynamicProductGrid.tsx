@@ -77,7 +77,6 @@ export const DynamicProductGrid = ({ whatsappNumber = '919876543210' }: { whatsa
                       ) : (
                         <div className="text-center">
                           <div className="text-3xl mb-1">📦</div>
-                          <span className="text-muted-foreground text-xs font-medium">{category.name}</span>
                         </div>
                       )}
                     </div>
@@ -123,7 +122,6 @@ export const DynamicProductGrid = ({ whatsappNumber = '919876543210' }: { whatsa
                   ) : (
                     <div className="text-center">
                       <div className="text-4xl mb-2">🛠️</div>
-                      <span className="text-muted-foreground text-sm font-medium">{product.name}</span>
                     </div>
                   )}
                 </div>

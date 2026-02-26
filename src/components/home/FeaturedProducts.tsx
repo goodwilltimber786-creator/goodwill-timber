@@ -82,7 +82,6 @@
                    ) : (
                      <div className="text-center">
                        <div className="text-5xl mb-2">🛠️</div>
-                       <span className="text-muted-foreground text-sm font-medium">{product.name}</span>
                      </div>
                    )}
                  </div>
