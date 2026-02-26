@@ -67,13 +67,20 @@ export const DynamicProductGrid = ({ whatsappNumber = '919876543210' }: { whatsa
                   onClick={() => setSelectedCategory(category.id)}
                 >
                   <CardContent className="p-6">
-                    {category.image_path && (
-                      <img
-                        src={category.image_path}
-                        alt={category.name}
-                        className="w-full h-32 object-cover rounded-lg mb-4"
-                      />
-                    )}
+                    <div className="w-full h-32 overflow-hidden rounded-lg mb-4 bg-muted flex items-center justify-center">
+                      {category.image_path ? (
+                        <img
+                          src={category.image_path}
+                          alt={category.name}
+                          className="w-full h-full object-cover rounded-lg"
+                        />
+                      ) : (
+                        <div className="text-center">
+                          <div className="text-3xl mb-1">📦</div>
+                          <span className="text-muted-foreground text-xs font-medium">{category.name}</span>
+                        </div>
+                      )}
+                    </div>
                     <h3 className="text-lg font-semibold text-gray-900">
                       {category.name}
                     </h3>
@@ -105,16 +112,21 @@ export const DynamicProductGrid = ({ whatsappNumber = '919876543210' }: { whatsa
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {displayedProducts.map((product) => (
-              <Card key={product.id} className="flex flex-col h-full hover:shadow-lg transition-shadow">
-                {product.image_path && (
-                  <div className="relative w-full h-48 overflow-hidden rounded-t-lg bg-gray-100">
+              <Card key={product.id} className="flex flex-col h-full hover:shadow-lg transition-shadow overflow-hidden">
+                <div className="relative w-full h-48 overflow-hidden bg-muted flex items-center justify-center">
+                  {product.image_path ? (
                     <img
                       src={product.image_path}
                       alt={product.name}
                       className="w-full h-full object-cover hover:scale-105 transition-transform"
                     />
-                  </div>
-                )}
+                  ) : (
+                    <div className="text-center">
+                      <div className="text-4xl mb-2">🛠️</div>
+                      <span className="text-muted-foreground text-sm font-medium">{product.name}</span>
+                    </div>
+                  )}
+                </div>
 
                 <CardContent className="p-6 flex flex-col flex-grow">
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">

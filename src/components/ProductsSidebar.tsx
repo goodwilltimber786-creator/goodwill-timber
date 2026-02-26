@@ -78,13 +78,17 @@ export const ProductsSidebar = ({ whatsappNumber }: ProductModalProps) => {
                 return (
                   <div key={category.id} className="space-y-3">
                     <div className="flex items-start gap-3 pb-3 border-b border-border">
-                      {category.image_path && (
-                        <img
-                          src={category.image_path}
-                          alt={category.name}
-                          className="w-12 h-12 rounded object-cover flex-shrink-0"
-                        />
-                      )}
+                      <div className="w-12 h-12 rounded overflow-hidden flex-shrink-0 bg-muted flex items-center justify-center">
+                        {category.image_path ? (
+                          <img
+                            src={category.image_path}
+                            alt={category.name}
+                            className="w-12 h-12 object-cover"
+                          />
+                        ) : (
+                          <span className="text-lg">📦</span>
+                        )}
+                      </div>
                       <div className="flex-1 min-w-0">
                         <h3 className="font-semibold text-foreground text-sm">
                           {category.name}
@@ -197,15 +201,20 @@ export const ProductsSidebar = ({ whatsappNumber }: ProductModalProps) => {
                 className="bg-card rounded border border-border overflow-hidden hover:shadow-md transition-shadow cursor-pointer hover:border-primary/50"
               >
                 {/* Product Image */}
-                {product.image_path && (
-                  <div className="w-full h-32 md:h-40 overflow-hidden bg-muted">
+                <div className="w-full h-32 md:h-40 overflow-hidden bg-muted flex items-center justify-center">
+                  {product.image_path ? (
                     <img
                       src={product.image_path}
                       alt={product.name}
                       className="w-full h-full object-cover"
                     />
-                  </div>
-                )}
+                  ) : (
+                    <div className="text-center">
+                      <div className="text-3xl mb-1">🛠️</div>
+                      <span className="text-muted-foreground text-xs font-medium">{product.name}</span>
+                    </div>
+                  )}
+                </div>
 
                 <div className="p-3 md:p-4 flex flex-col h-full">
                   {/* Product Name */}

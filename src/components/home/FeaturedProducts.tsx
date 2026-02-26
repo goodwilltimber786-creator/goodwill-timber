@@ -72,7 +72,7 @@
                  className="group bg-card rounded-lg overflow-hidden shadow-card card-hover"
                >
                  {/* Image */}
-                 <div className="relative aspect-square overflow-hidden bg-gray-200">
+                 <div className="relative aspect-square overflow-hidden bg-muted flex items-center justify-center">
                    {product.image_path ? (
                      <img
                        src={product.image_path}
@@ -80,8 +80,9 @@
                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                      />
                    ) : (
-                     <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
-                       <span className="text-2xl">📦</span>
+                     <div className="text-center">
+                       <div className="text-5xl mb-2">🛠️</div>
+                       <span className="text-muted-foreground text-sm font-medium">{product.name}</span>
                      </div>
                    )}
                  </div>

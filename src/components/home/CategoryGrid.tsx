@@ -61,7 +61,7 @@ export function CategoryGrid() {
                className="group relative overflow-hidden rounded-lg bg-card shadow-card card-hover"
              >
                {/* Image */}
-               <div className="aspect-square overflow-hidden bg-gray-200">
+               <div className="aspect-square overflow-hidden bg-muted">
                  {category.image_path ? (
                    <img
                      src={category.image_path}
@@ -69,8 +69,11 @@ export function CategoryGrid() {
                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                    />
                  ) : (
-                   <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
-                     <span className="text-gray-600 text-sm">No image</span>
+                   <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
+                     <div className="text-center">
+                       <div className="text-4xl mb-2">📦</div>
+                       <span className="text-muted-foreground text-sm font-medium">{category.name}</span>
+                     </div>
                    </div>
                  )}
                </div>

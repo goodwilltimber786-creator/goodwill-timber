@@ -51,15 +51,22 @@ const Categories = () => {
                     className="bg-card rounded border border-border overflow-hidden hover:shadow-md transition-shadow cursor-pointer group"
                   >
                     {/* Category Image */}
-                    {category.image_path && (
-                      <div className="w-full h-32 md:h-40 overflow-hidden bg-muted">
+                    <div className="w-full h-32 md:h-40 overflow-hidden bg-muted">
+                      {category.image_path ? (
                         <img
                           src={category.image_path}
                           alt={category.name}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
-                      </div>
-                    )}
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
+                          <div className="text-center">
+                            <div className="text-3xl mb-1">📦</div>
+                            <span className="text-muted-foreground text-xs font-medium">{category.name}</span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
 
                     {/* Category Info */}
                     <div className="p-3 md:p-4">
