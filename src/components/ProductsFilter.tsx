@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { Search, X, ChevronDown } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 
@@ -19,6 +19,13 @@ export const ProductsFilter = ({
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<string | null>(selectedCategory || null);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['search']));
+  const filterTimeoutRef = useRef<NodeJS.Timeout>();
+  const onFilterChangeRef = useRef(onFilterChange);
+
+  // Update ref when callback changes
+  useEffect(() => {
+    onFilterChangeRef.current = onFilterChange;
+  }, [onFilterChange]);
 
   // Toggle section expansion
   const toggleSection = (section: string) => {
@@ -60,10 +67,25 @@ export const ProductsFilter = ({
     });
   }, [products, searchQuery, selectedCategoryFilter, priceRange]);
 
-  // Notify parent component of filtered results
+  // Debounced callback for filter changes
   useEffect(() => {
-    onFilterChange(filteredProducts);
-  }, [filteredProducts, onFilterChange]);
+    // Clear previous timeout
+    if (filterTimeoutRef.current) {
+      clearTimeout(filterTimeoutRef.current);
+    }
+
+    // Set new timeout - only call onFilterChange after user stops typing for 300ms
+    filterTimeoutRef.current = setTimeout(() => {
+      onFilterChangeRef.current(filteredProducts);
+    }, 300);
+
+    // Cleanup
+    return () => {
+      if (filterTimeoutRef.current) {
+        clearTimeout(filterTimeoutRef.current);
+      }
+    };
+  }, [filteredProducts]);
 
   const clearFilters = () => {
     setSearchQuery('');

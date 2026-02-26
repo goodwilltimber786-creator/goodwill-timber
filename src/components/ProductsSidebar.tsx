@@ -24,7 +24,7 @@ export const ProductsSidebar = ({ whatsappNumber }: ProductModalProps) => {
   const [showMobileFilter, setShowMobileFilter] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
   const [showProductDetails, setShowProductDetails] = useState(false);
-  const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<any[] | null>(null);
   const [checkoutProduct, setCheckoutProduct] = useState<{
     open: boolean;
     product?: { id: string; name: string; price: number };
@@ -57,6 +57,9 @@ export const ProductsSidebar = ({ whatsappNumber }: ProductModalProps) => {
   const displayProducts = selectedCategoryId 
     ? getProductsByCategory(selectedCategoryId)
     : allProducts;
+
+  // Use filteredProducts from filter component, or fall back to displayProducts
+  const productsToDisplay = filteredProducts ?? displayProducts;
 
   return (
     <div className="flex flex-col lg:flex-row gap-0 min-h-[calc(100vh-250px)]">
@@ -116,13 +119,13 @@ export const ProductsSidebar = ({ whatsappNumber }: ProductModalProps) => {
 
         {/* Products Grid Content */}
         <div className="p-3 md:p-4 lg:p-6">
-          {filteredProducts.length === 0 ? (
+          {productsToDisplay.length === 0 ? (
             <div className="text-center py-16">
               <p className="text-muted-foreground text-lg">No products available</p>
             </div>
           ) : (
             <div className="grid gap-3 md:gap-4 lg:gap-5 grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {filteredProducts.map((product) => (
+              {productsToDisplay.map((product) => (
               <div
                 key={product.id}
                 onClick={() => {
