@@ -16,10 +16,11 @@ import { MessageCircle, ShoppingCart, Phone, Mail } from 'lucide-react';
 
 interface ProductModalProps {
   whatsappNumber: string;
+  initialCategoryId?: string | null;
 }
 
-export const ProductsSidebar = ({ whatsappNumber }: ProductModalProps) => {
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+export const ProductsSidebar = ({ whatsappNumber, initialCategoryId }: ProductModalProps) => {
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(initialCategoryId || null);
   const [showMobileCategories, setShowMobileCategories] = useState(false);
   const [showMobileFilter, setShowMobileFilter] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);

@@ -2,8 +2,11 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ProductsSidebar } from "@/components/ProductsSidebar";
 import { WhatsAppFloating } from "@/components/WhatsAppFloating";
+import { useSearchParams } from "react-router-dom";
 
 const Products = () => {
+  const [searchParams] = useSearchParams();
+  const categoryId = searchParams.get('category');
   const whatsappNumber = "918638264329"; // Change to your WhatsApp business number
 
   return (
@@ -25,7 +28,7 @@ const Products = () => {
         {/* Products Section with Sidebar */}
         <section className="py-8 md:py-12 bg-background">
           <div className="container mx-auto px-0 md:px-4">
-            <ProductsSidebar whatsappNumber={whatsappNumber} />
+            <ProductsSidebar whatsappNumber={whatsappNumber} initialCategoryId={categoryId} />
           </div>
         </section>
       </main>

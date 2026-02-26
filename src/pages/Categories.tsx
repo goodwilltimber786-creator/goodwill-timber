@@ -47,7 +47,7 @@ const Categories = () => {
                 categories.map((category) => (
                   <div
                     key={category.id}
-                    onClick={() => navigate(`/products`)}
+                    onClick={() => navigate(`/products?category=${category.id}`)}
                     className="bg-card rounded border border-border overflow-hidden hover:shadow-md transition-shadow cursor-pointer group"
                   >
                     {/* Category Image */}
