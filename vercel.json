@@ -31,6 +31,10 @@
       "dest": "/favicon.svg"
     },
     {
+      "src": "^/site\\.webmanifest$",
+      "dest": "/site.webmanifest"
+    },
+    {
       "src": ".*",
       "dest": "/index.html"
     }
