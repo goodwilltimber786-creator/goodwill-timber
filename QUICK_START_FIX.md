@@ -1,110 +1,38 @@
-# 🎯 Quick Start - Admin Setup Guide
+# 🎯 Quick Start - Fix & Test Guide
 
-## ⚠️ Current Issue
-```
-Error: relation "admin_users" does not exist
-```
+## The Issue
+❌ Category creation failing: "Failed to create"
+✅ Solution: Missing database RLS policies
 
-✅ Solution: Run the SQL migrations in Supabase
+## ⚡ 3-Step Fix (5 minutes)
 
-## ⚡ 3-Step Setup (5 minutes)
-
-### STEP 1: Copy This SQL (Admin Auth Migration)
+### STEP 1: Copy This SQL
 ```sql
--- First: Create admin_users table
-CREATE TABLE IF NOT EXISTS admin_users (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  username TEXT NOT NULL UNIQUE,
-  password_hash TEXT NOT NULL,
-  email TEXT UNIQUE,
-  full_name TEXT,
-  role TEXT DEFAULT 'admin',
-  is_active BOOLEAN DEFAULT true,
-  last_login TIMESTAMP,
-  created_at TIMESTAMP DEFAULT NOW(),
-  updated_at TIMESTAMP DEFAULT NOW()
-);
+DROP POLICY IF EXISTS categories_select_policy ON categories;
+DROP POLICY IF EXISTS products_select_policy ON products;
+DROP POLICY IF EXISTS submissions_insert_policy ON contact_submissions;
+DROP POLICY IF EXISTS submissions_select_policy ON contact_submissions;
 
--- Enable pgcrypto for password hashing
-CREATE EXTENSION IF NOT EXISTS pgcrypto;
+CREATE POLICY "cat_select" ON categories FOR SELECT USING (true);
+CREATE POLICY "cat_insert" ON categories FOR INSERT WITH CHECK (true);
+CREATE POLICY "cat_update" ON categories FOR UPDATE USING (true) WITH CHECK (true);
+CREATE POLICY "cat_delete" ON categories FOR DELETE USING (true);
 
--- Create the default admin user with password Admin@123
-INSERT INTO admin_users (username, password_hash, email, full_name, role)
-VALUES (
-  'admin',
-  crypt('Admin@123', gen_salt('bf')),
-  'admin@goodwilltimbers.com',
-  'Admin User',
-  'admin'
-) ON CONFLICT (username) DO NOTHING;
+CREATE POLICY "prod_select" ON products FOR SELECT USING (true);
+CREATE POLICY "prod_insert" ON products FOR INSERT WITH CHECK (true);
+CREATE POLICY "prod_update" ON products FOR UPDATE USING (true) WITH CHECK (true);
+CREATE POLICY "prod_delete" ON products FOR DELETE USING (true);
 
--- Create admin_sessions table
-CREATE TABLE IF NOT EXISTS admin_sessions (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  admin_user_id UUID NOT NULL REFERENCES admin_users(id) ON DELETE CASCADE,
-  session_token TEXT NOT NULL UNIQUE,
-  ip_address TEXT,
-  user_agent TEXT,
-  expires_at TIMESTAMP NOT NULL,
-  created_at TIMESTAMP DEFAULT NOW()
-);
+CREATE POLICY "sub_select" ON contact_submissions FOR SELECT USING (true);
+CREATE POLICY "sub_insert" ON contact_submissions FOR INSERT WITH CHECK (true);
+CREATE POLICY "sub_update" ON contact_submissions FOR UPDATE USING (true) WITH CHECK (true);
+CREATE POLICY "sub_delete" ON contact_submissions FOR DELETE USING (true);
 
--- Create admin_logs table for audit trail
-CREATE TABLE IF NOT EXISTS admin_logs (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  admin_user_id UUID REFERENCES admin_users(id) ON DELETE SET NULL,
-  action TEXT NOT NULL,
-  entity_type TEXT,
-  entity_id TEXT,
-  details JSONB,
-  ip_address TEXT,
-  created_at TIMESTAMP DEFAULT NOW()
-);
-
--- Function to authenticate admin
-CREATE OR REPLACE FUNCTION authenticate_admin(p_username TEXT, p_password TEXT)
-RETURNS TABLE (
-  authenticated BOOLEAN,
-  admin_user_id UUID,
-  username TEXT,
-  email TEXT,
-  full_name TEXT,
-  role TEXT
-) AS $$
-DECLARE
-  v_password_hash TEXT;
-  v_admin_id UUID;
-BEGIN
-  SELECT password_hash, id INTO v_password_hash, v_admin_id
-  FROM admin_users
-  WHERE admin_users.username = p_username
-    AND admin_users.is_active = true
-  LIMIT 1;
-
-  IF v_admin_id IS NULL THEN
-    RETURN QUERY SELECT false, NULL::UUID, NULL, NULL, NULL, NULL;
-    RETURN;
-  END IF;
-
-  IF v_password_hash = crypt(p_password, v_password_hash) THEN
-    RETURN QUERY
-    SELECT 
-      true,
-      au.id,
-      au.username,
-      au.email,
-      au.full_name,
-      au.role
-    FROM admin_users au
-    WHERE au.id = v_admin_id;
-  ELSE
-    RETURN QUERY SELECT false, NULL::UUID, NULL, NULL, NULL, NULL;
-  END IF;
-END;
-$$ LANGUAGE plpgsql;
-
--- Verify admin user was created
-SELECT 'Admin user created successfully' as status, username, email FROM admin_users WHERE username = 'admin';
+DROP TRIGGER IF EXISTS update_submissions_updated_at ON contact_submissions;
+CREATE TRIGGER update_submissions_updated_at 
+  BEFORE UPDATE ON contact_submissions
+  FOR EACH ROW 
+  EXECUTE FUNCTION update_updated_at_column();
 ```
 
 ### STEP 2: Run in Supabase
@@ -115,52 +43,11 @@ SELECT 'Admin user created successfully' as status, username, email FROM admin_u
 5. Click: **Run** (or Ctrl+Enter)
 6. Wait for ✅ Success
 
-### STEP 3: Test Admin Login
+### STEP 3: Test
 1. Refresh browser: **Cmd+Shift+R** (Mac) or **Ctrl+Shift+R** (Windows)
-2. Go to: http://localhost:5173/admin
-3. Login with:
-   - **Username:** `admin`
-   - **Password:** `Admin@123`
-4. Click: **Login to Dashboard**
-5. You should see: ✅ Admin Dashboard
-
----
-
-## Admin Credentials
-
-```
-👤 Username: admin
-🔐 Password: Admin@123
-```
-
----
-
-## What's Included
-
-✅ **Admin Authentication** - Database-based login
-✅ **Product Variants** - Add multiple variants per product
-✅ **Session Management** - 24-hour session expiration
-✅ **Audit Trail** - Track all admin actions
-✅ **Password Security** - Bcrypt hashing
-
----
-
-## Product Variants Feature
-
-When adding products, you can now:
-- Add multiple **SKU codes** per product
-- Select different **colors**
-- Set custom **dimensions**
-- Set different **prices** per variant
-- Track **stock** per variant
-
-Example:
-```
-Product: Teak Wood
-
-Variant 1: TEAK-001 | Natural | 2x4x8 ft | ₹5000 | Stock: 20
-Variant 2: TEAK-002 | Brown | 2x4x10 ft | ₹6000 | Stock: 15
-```
+2. Go to: http://localhost:5173/admin/login
+3. Click: **Categories** tab
+4. Click: **➕ Add Category**
 5. Enter name: "Test"
 6. Click: **Create**
 7. Should see: ✅ Category created successfully
