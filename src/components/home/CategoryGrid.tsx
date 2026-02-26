@@ -53,7 +53,7 @@ export function CategoryGrid() {
          </div>
  
          {/* Categories Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 stagger-children">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-6 stagger-children">
            {categories.map((category) => (
              <Link
                key={category.id}
